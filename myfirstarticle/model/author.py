@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import Column, Integer, String, DateTime, Boolean
+from sqlalchemy.orm import relationship
 from myfirstarticle.database import db
 
 
@@ -11,6 +12,7 @@ class Author(db.Model):
     verified = Column(Boolean, default=False)
     active = Column(Boolean, default=False)
     created_on = Column(DateTime, default=datetime.utcnow)
+    articles = relationship('Article', backref='author')
 
     def __repr__(self):
         return f'<Author id={self.id} name={self.name}>'
