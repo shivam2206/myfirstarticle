@@ -1,11 +1,18 @@
 from flask import Flask
 
 from myfirstarticle import settings
-from myfirstarticle.settings import APP_NAME
+from .database import db, migrate
+from .model import *  # Do not remove this import
 
 
-def create_app():
+def create_app(config=None):
     """This function creates the Flask app and handles all the initial configuration"""
-    flask_app = Flask(APP_NAME)
-    flask_app.config.from_object(settings)
-    return flask_app
+    app = Flask(settings.APP_NAME)
+    app.config.from_object(settings)
+
+    # Apply any modified config
+    app.config.from_object(config)
+
+    db.init_app(app)
+    migrate.init_app(app, db)
+    return app
