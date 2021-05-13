@@ -1,11 +1,11 @@
 from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
-from flask import Flask
+from flask import Flask, jsonify
+from flask_restful import Api
 
 from myfirstarticle import settings
 from .database import db, migrate
 from .model import *  # Do not remove this import
-from .api import api
 from flask_apispec.extension import FlaskApiSpec
 from .api.routes.article import ArticleAPI
 
@@ -17,16 +17,13 @@ def create_app(config=None):
 
     # Apply any modified config
     app.config.from_object(config)
-
     db.init_app(app)
     migrate.init_app(app, db)
-    api.init_app(app)
-    # docs = FlaskApiSpec(app)
-    # attach_routes(docs)
+    api = Api(app)
 
     app.config.update({
         'APISPEC_SPEC': APISpec(
-            title='Awesome Project',
+            title='My First Article',
             version='v1',
             plugins=[MarshmallowPlugin()],
             openapi_version='2.0.0'
@@ -35,10 +32,17 @@ def create_app(config=None):
         'APISPEC_SWAGGER_UI_URL': '/swagger-ui/'  # URI to access UI of API Doc
     })
     docs = FlaskApiSpec(app)
-    attach_routes(api, docs)
+
+    def add_route(resource, route):
+        api.add_resource(resource, route)
+        docs.register(resource)
+
+    @app.errorhandler(422)
+    def validation_error(err):
+        messages = err.data.get('messages').get('json')
+        response = {"status": "failed", "messages": messages}
+        return jsonify(response), 422
+
+    add_route(ArticleAPI, '/articles')
+
     return app
-
-
-def attach_routes(_api, docs):
-    _api.add_resource(ArticleAPI, '/articles')
-    docs.register(ArticleAPI)
