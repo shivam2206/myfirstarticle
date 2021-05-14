@@ -17,3 +17,7 @@ class Article(db.Model):
 
     def __repr__(self):
         return f'<Article id={self.id} title={self.title}>'
+
+    class Meta:
+        allow_updates = ['title', 'short_description', 'long_description', 'published']
+
