@@ -10,25 +10,29 @@ from marshmallow import ValidationError
 from ...model import Article
 from ...schemas.article import ArticlePaginationSchema, ArticleSchema, ArticleUpdateSchema
 from ...schemas.base import SuccessSchema, BaseRemoveSchema
-from ...utils.decorators import add_pagination
+from ...utils.decorators import add_pagination, login_required
 from ...database import db
 
 
 class ArticleAPI(MethodResource, Resource):
+    @login_required
     @marshal_with(ArticlePaginationSchema)
     @add_pagination
-    def get(self):
+    def get(self, **kwargs):
         articles = Article.query.all()
         return articles
 
-    @use_kwargs(ArticleSchema, location="json")
     @marshal_with(ArticleSchema)
+    @use_kwargs(ArticleSchema, location="json")
+    @login_required
     def post(self, **kwargs):
         new = Article(**kwargs)
+        new.author_id = kwargs['author'].id
         db.session.add(new)
         db.session.commit()
         return new
 
+    @login_required
     @use_kwargs(ArticleUpdateSchema, location="json")
     @marshal_with(ArticleUpdateSchema)
     def put(self, **kwargs):
@@ -41,11 +45,13 @@ class ArticleAPI(MethodResource, Resource):
         db.session.commit()
         return article
 
+    @login_required
     @use_kwargs(BaseRemoveSchema, location="json")
     @marshal_with(SuccessSchema)
     def delete(self, **kwargs):
         article = Article.query.get_or_404(kwargs['id'], description="Invalid Id")
         try:
             db.session.delete(article)
+            db.session.commit()
         except Exception as e:
             return {"status": "failed", "message": str(e)}

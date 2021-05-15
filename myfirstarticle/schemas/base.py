@@ -14,16 +14,6 @@ class PaginationSchema(Schema):
 class BaseUpdateSchema(Schema):
     id = fields.Integer()
 
-    def __init__(self, *args, **kwargs):
-        super(BaseUpdateSchema, self).__init__(*args, **kwargs)
-        _declared_fields = self._declared_fields
-        for field in _declared_fields:
-            if field == "id":
-                _declared_fields[field].required = True
-                _declared_fields[field].dump_only = False
-            else:
-                _declared_fields[field].required = False
-
 
 class BaseRemoveSchema(Schema):
     id = fields.Integer(required=True, validate=Range(min=1), description="Unique id of the record")

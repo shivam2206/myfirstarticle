@@ -8,6 +8,8 @@ from .database import db, migrate
 from .model import *  # Do not remove this import
 from flask_apispec.extension import FlaskApiSpec
 from .api.routes.article import ArticleAPI
+from .api.routes.author import AuthorAPI
+from .api.routes.auth import AuthLoginAPI
 
 
 def create_app(config=None):
@@ -44,5 +46,7 @@ def create_app(config=None):
         return jsonify(response), 422
 
     add_route(ArticleAPI, '/articles')
+    add_route(AuthorAPI, '/authors')
+    add_route(AuthLoginAPI, '/auth/login')
 
     return app
