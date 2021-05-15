@@ -16,6 +16,7 @@ from ...utils.helper import encode_auth_token, decode_auth_token
 from ...database import db
 
 
+@doc(tags=['Auth'])
 class AuthLoginAPI(MethodResource, Resource):
 
     @use_kwargs(AuthSchema, location="json")

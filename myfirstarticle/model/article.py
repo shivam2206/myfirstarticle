@@ -1,8 +1,10 @@
 from datetime import datetime
 
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, Text, ForeignKey
-from sqlalchemy.orm import relationship
+
 from myfirstarticle.database import db
+
+__all__ = ['Article']
 
 
 class Article(db.Model):
@@ -20,4 +22,3 @@ class Article(db.Model):
 
     class Meta:
         allow_updates = ['title', 'short_description', 'long_description', 'published']
-

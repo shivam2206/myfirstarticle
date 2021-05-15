@@ -12,7 +12,6 @@ from ..settings import MAX_PAGE_ITEMS
 def add_pagination(func):
     @wraps(func)
     def decorated(*args, **kwargs):
-        print(request.args)
         result = get_paginated_list(func(*args, **kwargs), request.args.get('start', 1), MAX_PAGE_ITEMS)
         return result
     return decorated
@@ -33,7 +32,6 @@ def login_required(func):
                 if not author or not (author.active and author.verified):
                     raise Exception("This account is not allowed to access this resource.")
                 kwargs['author'] = author
-
             else:
                 raise Exception("Auth token is required to access this resource.")
         except Exception as e:

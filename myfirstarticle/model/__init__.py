@@ -1,2 +1,2 @@
-from .author import Author
-from .article import Article
+from .author import *
+from .article import *

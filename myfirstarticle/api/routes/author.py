@@ -1,21 +1,21 @@
-import json
-
-from flask import request
-from flask_apispec import marshal_with
-from flask_restful import Resource, abort
-from flask_apispec.views import MethodResource
 from flask_apispec import marshal_with, doc, use_kwargs
-from marshmallow import ValidationError
+from flask_apispec.views import MethodResource
+from flask_restful import Resource, abort
 from sqlalchemy.exc import IntegrityError
 
-from ...model import Author
-from ...schemas.author import *
-from ...schemas.base import SuccessSchema, BaseRemoveSchema
-from ...utils.decorators import add_pagination, login_required
 from ...database import db
-from ...utils.helper import decode_auth_token
+from ...model import Author
+from ...schemas import (SuccessSchema,
+                        BaseRemoveSchema,
+                        AuthorPaginationSchema,
+                        AuthorSchema,
+                        AuthorUpdateSchema)
+from ...utils.decorators import add_pagination, login_required
+
+__all__ = ['AuthorAPI']
 
 
+@doc(tags=['Authors'])
 class AuthorAPI(MethodResource, Resource):
     @login_required
     @marshal_with(AuthorPaginationSchema)
