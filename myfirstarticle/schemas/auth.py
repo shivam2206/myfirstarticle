@@ -1,6 +1,6 @@
 from marshmallow import Schema, fields
-from .base import PaginationSchema, BaseUpdateSchema
-from marshmallow.validate import Length
+
+__all__ = ['AuthSchema', 'TokenSchema']
 
 
 class AuthSchema(Schema):

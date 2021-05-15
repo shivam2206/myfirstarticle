@@ -1,8 +1,10 @@
 from marshmallow import Schema, fields
+from marshmallow.validate import Length
 
 from .author import AuthorSchema
-from .base import PaginationSchema, BaseUpdateSchema
-from marshmallow.validate import Length
+from .base import PaginationSchema
+
+__all__ = ['ArticleSchema', 'ArticlePaginationSchema', 'ArticleUpdateSchema', 'ArticleGetSchema']
 
 
 class ArticleSchema(Schema):
@@ -26,3 +28,8 @@ class ArticleUpdateSchema(Schema):
     short_description = fields.String(required=True, validate=Length(max=300),
                                       description="Short description for preview")
     long_description = fields.String(required=True, description="Full content of the Article")
+
+
+class ArticleGetSchema(Schema):
+    id = fields.Integer(load_only=True, description="Search a Article by its id")
+    author_id = fields.Integer(load_only=True, description="Search Articles published by the specific author")

@@ -1,6 +1,3 @@
-from flask_restful import abort
-
-
 def get_paginated_list(results, start, limit):
     start = int(start)
     limit = int(limit)

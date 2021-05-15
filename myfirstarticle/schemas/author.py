@@ -2,6 +2,8 @@ from marshmallow import Schema, fields
 from .base import PaginationSchema, BaseUpdateSchema
 from marshmallow.validate import Length
 
+__all__ = ['AuthorSchema', 'AuthorPaginationSchema', 'AuthorUpdateSchema']
+
 
 class AuthorSchema(Schema):
     id = fields.Integer(dump_only=True)

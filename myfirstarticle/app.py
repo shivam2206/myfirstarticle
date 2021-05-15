@@ -1,15 +1,11 @@
-from apispec import APISpec
-from apispec.ext.marshmallow import MarshmallowPlugin
-from flask import Flask, jsonify
+from flask import Flask
+from flask_apispec.extension import FlaskApiSpec
 from flask_restful import Api
 
 from myfirstarticle import settings
+from .api.routes import initialize_routes
 from .database import db, migrate
-from .model import *  # Do not remove this import
-from flask_apispec.extension import FlaskApiSpec
-from .api.routes.article import ArticleAPI
-from .api.routes.author import AuthorAPI
-from .api.routes.auth import AuthLoginAPI
+from .utils.error_handler import handle_errors
 
 
 def create_app(config=None):
@@ -21,32 +17,11 @@ def create_app(config=None):
     app.config.from_object(config)
     db.init_app(app)
     migrate.init_app(app, db)
-    api = Api(app)
-
-    app.config.update({
-        'APISPEC_SPEC': APISpec(
-            title='My First Article',
-            version='v1',
-            plugins=[MarshmallowPlugin()],
-            openapi_version='2.0.0'
-        ),
-        'APISPEC_SWAGGER_URL': '/swagger/',  # URI to access API Doc JSON
-        'APISPEC_SWAGGER_UI_URL': '/swagger-ui/'  # URI to access UI of API Doc
-    })
+    api = Api(app, prefix='/api/v1')
     docs = FlaskApiSpec(app)
 
-    def add_route(resource, route):
-        api.add_resource(resource, route)
-        docs.register(resource)
-
-    @app.errorhandler(422)
-    def validation_error(err):
-        messages = err.data.get('messages').get('json')
-        response = {"status": "failed", "messages": messages}
-        return jsonify(response), 422
-
-    add_route(ArticleAPI, '/articles')
-    add_route(AuthorAPI, '/authors')
-    add_route(AuthLoginAPI, '/auth/login')
+    handle_errors(app)
+    initialize_routes(api, docs)
 
     return app
+

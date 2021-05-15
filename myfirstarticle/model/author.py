@@ -1,10 +1,10 @@
 from datetime import datetime
-
 from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
-
 from myfirstarticle.database import db
+
+__all__ = ['Author']
 
 
 class Author(db.Model):

@@ -1,9 +1,6 @@
 import os
 
 # ---- Database configuration ----
-from apispec import APISpec
-from apispec.ext.marshmallow import MarshmallowPlugin
-
 SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URI']
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -16,12 +13,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', '\xfa\xa4\xf9c\x86\xbb\x1c\xaeK\x9cu\x
 TOKEN_RETENTION_PERIOD_DAYS = 10
 
 # ---- Swagger Configuration ----
-APISPEC_SPEC = APISpec(
-    title=APP_NAME,
-    version='v1',
-    plugins=[MarshmallowPlugin()],
-    openapi_version='2.0.0'
-),
+APISPEC_TITLE = APP_NAME
 APISPEC_SWAGGER_URL = '/swagger/'
 APISPEC_SWAGGER_UI_URL = '/swagger-ui/'
 
