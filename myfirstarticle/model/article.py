@@ -13,7 +13,7 @@ class Article(db.Model):
     published = Column(Boolean, default=False)
     created_on = Column(DateTime, default=datetime.utcnow)
     modified_on = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    author_id = Column(Integer, ForeignKey('author.id'))
+    author_id = Column(Integer, ForeignKey('author.id', ondelete='CASCADE'))
 
     def __repr__(self):
         return f'<Article id={self.id} title={self.title}>'
