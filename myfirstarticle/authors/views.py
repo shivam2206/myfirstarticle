@@ -7,7 +7,7 @@ from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import redirect
 
 from myfirstarticle.database import db
-from myfirstarticle.model import Author
+from myfirstarticle.model import Author, Article
 from myfirstarticle.schemas import AuthorSchema, AuthSchema
 
 authors = Blueprint('authors',
@@ -87,10 +87,12 @@ def logout():
     return redirect('/')
 
 
-@authors.route("/profile")
+@authors.route("/profile/<int:author_id>")
 @login_required
-def profile():
-    return "Here you go!!"
+def profile(author_id):
+    author = Author.query.get_or_404(author_id)
+    items = Article.query.filter_by(author_id=author.id).order_by(Article.created_on.desc()).all()
+    return render_template('authors/profile_view.html', author=author, items=items, hide_posted_by=True)
 
 
 @authors.route("/create")

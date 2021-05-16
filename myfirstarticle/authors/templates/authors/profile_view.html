@@ -1,0 +1,5 @@
+{% extends "list.html" %}
+{% block title %} {{ author.name }} {% endblock %}
+{% block mainheading %} {{ author.name }} {% endblock %}
+{% block subheading %} Member since {{ author.created_on }} {% endblock %}
+{% block header_background %}url('{{ url_for('static', filename='assets/img/profile-bg.jpg') }} {% endblock %}

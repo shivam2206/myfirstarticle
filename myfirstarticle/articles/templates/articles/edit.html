@@ -1,2 +1,3 @@
 {% extends "articles/add.html" %}
-{% block top_heading %}Good to see you making improvements!! {% endblock %}
+{% block title %} Edit - {{ item.title }} {% endblock %}
+{% block top_heading %}Good to see you making improvements!! <a class="btn btn-link" href="{{ url_for('articles.view', article_id=item.id) }}">Discard & go back</a> {% endblock %}

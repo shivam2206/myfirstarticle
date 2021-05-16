@@ -1,4 +1,7 @@
 {% extends "header.html" %}
+{% block title %} {{ item.title }}  {% endblock %}
+{% block mainheading %} {{ item.title }}  {% endblock %}
+
 {% block subheading %} {% endblock %}
 
 {% block content %}
@@ -9,7 +12,7 @@
             <div class="col-lg-8 col-md-10 mx-auto">
                 <p class="post-meta">
                     Posted by
-                    <a href="#!">{{ item.author.name }}</a>
+                    <a href="{{ url_for('authors.profile', author_id=item.author.id) }}">{{ item.author.name }}</a>
                     on {{ item.created_on }}
                 </p>
                 <div class="container-fluid">
@@ -20,6 +23,9 @@
     </div>
 </article>
 {% if current_user.is_authenticated and item.author_id == current_user.id %}
-<center><a class="btn btn-primary" href="{{ url_for('articles.edit', article_id=item.id) }}">Edit</a></center>
+<center>
+    <a class="btn btn-primary" href="{{ url_for('articles.edit', article_id=item.id) }}">Edit</a>
+    <a class="btn btn-danger" style="margin-left:40px" href="{{ url_for('articles.delete', article_id=item.id) }}">Delete</a>
+</center>
 {% endif %}
 {% endblock %}
