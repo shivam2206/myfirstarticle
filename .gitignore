@@ -130,3 +130,8 @@ dmypy.json
 
 # PyCharm
 .idea/
+
+
+# Extra Stuff
+/myfirstarticle/static/uploads/*
+!/myfirstarticle/static/uploads/keepit

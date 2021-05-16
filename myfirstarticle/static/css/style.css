@@ -10372,3 +10372,23 @@ header.masthead .post-heading .meta a {
     font-size: 36px;
   }
 }
+
+.alert{
+    border:1px solid black;
+    display: inline-block;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #222;
+    font-family: sans-serif;
+}
+.alert.success {
+  background-color: #bcff57;
+  border-color: #6db500;
+}
+
+.alert.error {
+  background-color: #ff8282;
+  border-color: #ff4242;
+
+}

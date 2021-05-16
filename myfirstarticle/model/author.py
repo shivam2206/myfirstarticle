@@ -1,4 +1,6 @@
 from datetime import datetime
+
+from flask_login import UserMixin
 from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -7,7 +9,7 @@ from myfirstarticle.database import db
 __all__ = ['Author']
 
 
-class Author(db.Model):
+class Author(db.Model, UserMixin):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False)
     email = Column(String(255), unique=True, nullable=False)
@@ -33,3 +35,9 @@ class Author(db.Model):
 
     class Meta:
         allow_updates = ['name', 'active', 'password', 'verified']
+
+    def get_id(self):
+        return self.id
+
+    def is_active(self):
+        return self.active and self.verified
