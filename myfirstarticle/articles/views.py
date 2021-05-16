@@ -90,3 +90,22 @@ def edit(article_id):
             print(e)
             flash('Unknown error occurred', 'error')
     return render_template('articles/edit.html', item=item)
+
+
+@articles.route('/delete/<int:article_id>', methods=['GET'])
+@login_required
+def delete(article_id):
+    item = Article.query.get_or_404(article_id)
+    try:
+        db.session.delete(item)
+        db.session.commit()
+        flash('Article has been removed successfully', 'success')
+        return redirect(url_for('articles.index'))
+    except ValidationError as e:
+        errors = e.normalized_messages()
+        for key, error in errors.items():
+            flash(f'Issue with {key}: {error[0]}', 'error')
+    except Exception as e:
+        print(e)
+        flash('Unknown error occurred', 'error')
+    return redirect(url_for('articles.index'))

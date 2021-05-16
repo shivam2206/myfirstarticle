@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% block title %} Create {% endblock %}
 {% block content %}
 
 
@@ -7,7 +7,7 @@
     <br><br>
     <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-            <h3>{% block top_heading %}Lets write some inspiring stuff!! {% endblock %}</h3>
+            <h3>{% block top_heading %}Lets write some inspiring stuff!! <a class="btn btn-link" href="{{ url_for('articles.index') }}">Discard & go back</a> {% endblock %}</h3>
             <form method="post">
                 <div class="control-group">
                     <div class="form-group floating-label-form-group controls">

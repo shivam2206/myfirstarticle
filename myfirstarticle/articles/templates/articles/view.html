@@ -1,4 +1,5 @@
 {% extends "header.html" %}
+{% block title %} {{ item.title }}  {% endblock %}
 {% block mainheading %} {{ item.title }}  {% endblock %}
 
 {% block subheading %} {% endblock %}
@@ -22,6 +23,9 @@
     </div>
 </article>
 {% if current_user.is_authenticated and item.author_id == current_user.id %}
-<center><a class="btn btn-primary" href="{{ url_for('articles.edit', article_id=item.id) }}">Edit</a></center>
+<center>
+    <a class="btn btn-primary" href="{{ url_for('articles.edit', article_id=item.id) }}">Edit</a>
+    <a class="btn btn-danger" style="margin-left:40px" href="{{ url_for('articles.delete', article_id=item.id) }}">Delete</a>
+</center>
 {% endif %}
 {% endblock %}

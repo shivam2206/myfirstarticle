@@ -2,15 +2,23 @@
 
 {% block mainheading %} Start before you’re ready {% endblock %}
 {% block subheading %} Nothing lasts forever. Not even your troubles. {% endblock %}
+{% block header_background %}url('{{ url_for('static', filename='assets/img/about-bg.jpg') }} {% endblock %}
 {% block content %}
 
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-md-10 mx-auto">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe nostrum ullam eveniet pariatur voluptates odit, fuga atque ea nobis sit soluta odio, adipisci quas excepturi maxime quae totam ducimus consectetur?</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius praesentium recusandae illo eaque architecto error, repellendus iusto reprehenderit, doloribus, minus sunt. Numquam at quae voluptatum in officia voluptas voluptatibus, minus!</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut consequuntur magnam, excepturi aliquid ex itaque esse est vero natus quae optio aperiam soluta voluptatibus corporis atque iste neque sit tempora!</p>
-                </div>
-            </div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            <p>
+                So you are here probably looking at what this project does. Well, nothing new but it's a result of the motivation to sharpen my as well as others skills in Python. The intention behind making this an open-source project is just to hear about the possible improvements from the brilliant minds of the rest of the world.
+                <br><br>
+                I am trying my best to make this project production-ready not only from the deployment perspective but more from a robust & scalable code perspective. During my learning days, I really couldn't find any single place helping in understanding different Flask features/extensions altogether. Flask is not alone, it comes with its vast ecosystem.
+
+                <br><br>
+                I will keep adding stuff to make this one place for most of the developers who are in the early stages of learning Python &amp; Flask-based production-ready applications.
+
+                <br> I'll appreciate any feedback. You can reach out to me on <a href="https://github.com/shivam2206">Github</a>
+            </p>
         </div>
+    </div>
+</div>
 {% endblock %}
