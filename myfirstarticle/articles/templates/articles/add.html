@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<div class="container">
+    <br><br>
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            <h3>{% block top_heading %}Lets write some inspiring stuff!! {% endblock %}</h3>
+            <form method="post">
+                <div class="control-group">
+                    <div class="form-group floating-label-form-group controls">
+                        <label>Article Title</label>
+                        <input class="form-control" name="title" placeholder="Your Article's title here..." required
+                               value="{{ item.title if item else '' }}"/>
+
+                    </div>
+                    <div class="form-group floating-label-form-group controls">
+                        <label>Short Description</label>
+                        <textarea class="form-control" name="short_description" placeholder="Short description for preview..." required>{{ item.short_description if item else '' }}</textarea>
+
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        <label>Article Content</label>
+                        <textarea style="height:300" class="form-control" name="long_description" id="long_description" placeholder="Type your great stuff here....">{{ item.long_description if item else '' }}</textarea>
+                    </div>
+                </div>
+
+                <br/>
+
+                <center>
+                    <button class="btn btn-primary" type="submit">Publish</button>
+                </center>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
+<script type="text/javascript">
+    tinymce.init({
+        selector: '#long_description',
+        plugins: [
+            'advlist autolink link image imagetools lists charmap print preview hr anchor pagebreak spellchecker',
+            'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+            'save table directionality template paste codesample'
+        ],
+        imagetools_toolbar: "rotateleft rotateright | flipv fliph | editimage imageoptions",
+        toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons | codesample',
+        images_upload_url: '{{ url_for('articles.image_uploader') }}',
+        automatic_uploads: true,
+        images_reuse_filename: false,
+        images_upload_base_path: '/static/uploads',
+        codesample_languages: [
+            { text: 'HTML/XML', value: 'markup' },
+            { text: 'JavaScript', value: 'javascript' },
+            { text: 'CSS', value: 'css' },
+            { text: 'Processing', value: 'processing' },
+            { text: 'Python', value: 'python' }
+        ],
+        width: "100%",
+        height : "1000"
+    });
+
+</script>
+{% endblock %}

@@ -18,3 +18,6 @@ APISPEC_SWAGGER_URL = '/swagger/'
 APISPEC_SWAGGER_UI_URL = '/swagger-ui/'
 
 MAX_PAGE_ITEMS = 20
+
+
+ASSETS_UPLOAD_PATH = os.path.join(os.path.dirname(__file__), 'static/uploads')

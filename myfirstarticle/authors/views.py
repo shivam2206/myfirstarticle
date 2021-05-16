@@ -90,5 +90,10 @@ def logout():
 @authors.route("/profile")
 @login_required
 def profile():
-    print("P{ROFFFFFFFFFF")
+    return "Here you go!!"
+
+
+@authors.route("/create")
+@login_required
+def create():
     return "Here you go!!"
