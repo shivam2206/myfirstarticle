@@ -1,0 +1,49 @@
+{% extends "header.html" %}
+{% block mainheading %} Join us in this journey {% endblock %}
+{% block subheading %} {% endblock %}
+
+{% block content %}
+
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+
+            <h3>Register to join us</h3>
+            <form action="{{ url_for('authors.register') }}" method="post">
+                <div class="control-group">
+                    <div class="form-group floating-label-form-group controls">
+                        <label>Name</label>
+                        <input class="form-control" name="name" type="text" placeholder="Name" required
+                               data-validation-required-message="Please enter your name."/>
+                        <p class="help-block text-danger"></p>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="form-group floating-label-form-group controls">
+                        <label>Email Address</label>
+                        <input class="form-control" name="email" type="email" placeholder="Email Address" required
+                               data-validation-required-message="Please enter your email address."/>
+                        <p class="help-block text-danger"></p>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        <label>Password</label>
+                        <input class="form-control" name="password" type="password" placeholder="Password" required
+                               data-validation-required-message="Please enter your password (4-16 characters)."/>
+                        <p class="help-block text-danger"></p>
+                    </div>
+                </div>
+
+                <br/>
+                <div id="success"></div>
+                <p>Already have an account? <a href="{{ url_for('authors.login') }}">Login here</a></p>
+                <button class="btn btn-primary" id="sendMessageButton" type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

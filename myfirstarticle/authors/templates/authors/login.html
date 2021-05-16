@@ -1,0 +1,41 @@
+{% extends "header.html" %}
+{% block mainheading %} Lets make this world a better place {% endblock %}
+{% block subheading %} {% endblock %}
+
+{% block content %}
+
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            <h3>Login to express your thoughts</h3>
+            <form method="post">
+                <div class="control-group">
+                    <div class="form-group floating-label-form-group controls">
+                        <label>Email Address</label>
+                        <input class="form-control" name="email" type="email" placeholder="Email Address" required
+                               data-validation-required-message="Please enter your email address."/>
+                        <p class="help-block text-danger"></p>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        <label>Password</label>
+                        <input class="form-control" name="password" type="password" placeholder="Password" required
+                               data-validation-required-message="Please enter your password (4-16 characters)."/>
+                        <p class="help-block text-danger"></p>
+                    </div>
+                </div>
+
+                <br/>
+                <div id="success"></div>
+                <p>Don't have an account? <a href="{{ url_for('authors.register') }}">Register here</a></p>
+
+                <button class="btn btn-primary" id="sendMessageButton" type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
