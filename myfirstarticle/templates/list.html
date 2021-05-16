@@ -12,10 +12,14 @@
                     <h3 class="post-subtitle">{{ item.short_description }}</h3>
                 </a>
                 <p class="post-meta">
+                {% if not hide_posted_by %}
                     Posted by
-                    <a href="#!">{{ item.author.name }}</a>
-                    on {{ item.created_on }}
+                    <a href="{{ url_for('authors.profile', author_id=item.author.id) }}">{{ item.author.name }}</a>
+                    on
+                    {% endif %}
+                     {{ item.created_on }}
                 </p>
+
             </div>
             <hr/>
             {% endfor %}
