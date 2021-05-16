@@ -9,3 +9,8 @@ home = Blueprint('home',
 @home.route('/')
 def index():
     return render_template('home/home.html')
+
+
+@home.route('/about')
+def about():
+    return render_template('home/about.html')
