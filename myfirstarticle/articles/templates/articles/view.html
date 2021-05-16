@@ -1,0 +1,21 @@
+{% extends "header.html" %}
+{% block mainheading %} {{ item.title }} {% endblock %}
+{% block subheading %} {% endblock %}
+
+{% block content %}
+<!-- Post Content-->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <p class="post-meta">
+                    Posted by
+                    <a href="#!">{{ item.author.name }}</a>
+                    on {{ item.created_on }}
+                </p>
+                {{ item.long_description }}
+            </div>
+        </div>
+    </div>
+</article>
+{% endblock %}

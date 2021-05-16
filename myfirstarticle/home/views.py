@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template
 
+from myfirstarticle.model import Article
+
 home = Blueprint('home',
                  __name__,
                  template_folder='templates',
@@ -8,7 +10,8 @@ home = Blueprint('home',
 
 @home.route('/')
 def index():
-    return render_template('home/home.html')
+    items = Article.query.order_by(Article.created_on.desc()).limit(10).all()
+    return render_template('home/home.html', items=items)
 
 
 @home.route('/about')

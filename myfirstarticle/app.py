@@ -7,7 +7,7 @@ from .api.routes import initialize_routes
 from .database import db, migrate
 from .utils.error_handler import handle_errors
 from .home import home
-import os
+from .articles import articles
 
 
 def create_app(config=None):
@@ -25,6 +25,7 @@ def create_app(config=None):
 
     # Register blueprints
     app.register_blueprint(home)
+    app.register_blueprint(articles)
 
     # Add API support
     api = Api(app, prefix='/api/v1')
