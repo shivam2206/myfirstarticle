@@ -13,11 +13,7 @@ import os
 def create_app(config=None):
     """This function creates the Flask app and handles all the initial configuration"""
 
-    # TODO: Check why flask is not able to pick templates folder without specifying like below
-    app = Flask(settings.APP_NAME,
-                template_folder=os.path.join(os.path.dirname(__file__), 'templates'),
-                static_folder=os.path.join(os.path.dirname(__file__), 'static')
-                )
+    app = Flask(__name__)
     app.config.from_object(settings)
 
     # Apply any modified config
