@@ -1,0 +1,27 @@
+{% extends "header.html" %}
+
+{% block content %}
+<!-- Main Content-->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            {% for item in items %}
+            <div class="post-preview">
+                <a href="{{ url_for('articles.view', article_id=item.id) }}">
+                    <h2 class="post-title">{{ item.title }}</h2>
+                    <h3 class="post-subtitle">{{ item.short_description }}</h3>
+                </a>
+                <p class="post-meta">
+                    Posted by
+                    <a href="#!">{{ item.author.name }}</a>
+                    on {{ item.created_on }}
+                </p>
+            </div>
+            <hr/>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
