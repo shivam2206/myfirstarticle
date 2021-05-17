@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask
 from flask_apispec.extension import FlaskApiSpec
 from flask_login import LoginManager
 from flask_restful import Api
@@ -17,10 +17,14 @@ def create_app(config=None):
     """This function creates the Flask app and handles all the initial configuration"""
 
     app = Flask(__name__)
-    app.config.from_object(settings)
 
-    # Apply any modified config
-    app.config.from_object(config)
+    if config:
+        # Apply any modified config
+        app.config.from_object(config)
+    else:
+        # Apply default config
+        app.config.from_object(settings)
+
     db.init_app(app)
     migrate.init_app(app, db)
 
