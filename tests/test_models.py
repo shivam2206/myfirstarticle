@@ -43,19 +43,3 @@ class TestAuthorModel(BaseTestCase):
     def test_get_id(self):
         author = self.create_author()
         assert author.get_id() == author.id
-
-class TestAuthorModel(BaseTestCase):
-    def test_encode_auth_token(self):
-        author = self.create_author()
-        db.session.add(author)
-        db.session.commit()
-        auth_token = encode_auth_token(author.id)
-        assert isinstance(auth_token, str)
-        assert len(auth_token.split('.')) == 3
-
-    def test_decode_auth_token(self):
-        author = self.create_author()
-        db.session.add(author)
-        db.session.commit()
-        auth_token = encode_auth_token(author.id)
-        assert decode_auth_token(auth_token) == 1
