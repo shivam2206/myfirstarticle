@@ -21,7 +21,7 @@ authors = Blueprint('authors',
 def register():
     if current_user.is_authenticated:
         return redirect('/')
-
+    status_code = 200
     if request.method == 'POST':
         try:
             validated_data = AuthorSchema().load(request.form)
@@ -34,50 +34,51 @@ def register():
             db.session.add(new)
             db.session.commit()
             flash('Account has been created successfully, please login to access', 'success')
-            return redirect('/register')
+            return redirect(url_for('authors.login'))
         except ValidationError as e:
             errors = e.normalized_messages()
             for key, error in errors.items():
                 flash(f'Issue with {key}: {error[0]}', 'error')
+            status_code = 400
         except IntegrityError:
             flash('This Account already exists, please login', 'error')
+            status_code = 422
         except Exception as e:
-            print(e)
+            status_code = 400
             flash('Unknown error occurred', 'error')
-    return render_template('authors/register.html')
+    return render_template('authors/register.html'), status_code
 
 
 @authors.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect('/')
-
+    status_code = 200
     if request.method == 'POST':
         try:
             validated_data = AuthSchema().load(request.form)
             author = Author.query.filter_by(email=validated_data['email']).first()
             if not author or not author.verify_password(validated_data['password']):
-                raise ValidationError("Invalid username or password")
+                raise ValidationError("Invalid username or password.")
             if not (author.active and author.verified):
-                raise ValidationError("This account is not active")
+                raise ValidationError("This account is not active.")
             login_user(author)
             next_url = request.args.get('next')
-            print("Redirecting to ", next_url)
             return redirect(next_url or '/')
 
         except ValidationError as e:
             if isinstance(e, str):
                 flash(e, 'error')
             errors = e.normalized_messages()
+            status_code = 401
             for key, error in errors.items():
                 flash(f'Issue with {key}: {error[0]}', 'error')
-        except IntegrityError:
-            flash('This Account already exists, please login', 'error')
         except Exception as e:
             print(e)
             traceback.print_exc()
             flash('Unknown error occurred', 'error')
-    return render_template('authors/login.html')
+            status_code = 401
+    return render_template('authors/login.html'), status_code
 
 
 @authors.route("/logout")
