@@ -1,7 +1,8 @@
+import json
 import os
 from datetime import datetime
 
-from flask import Blueprint, render_template, request, url_for, jsonify, make_response, flash
+from flask import Blueprint, render_template, request, url_for, jsonify, flash, Response
 from flask_login import login_required, current_user
 from marshmallow import ValidationError
 from werkzeug.utils import redirect
@@ -53,7 +54,7 @@ def create():
 
 
 @articles.route('/image_uploader', methods=['POST'])
-@login_required
+# @login_required
 def image_uploader():
     file = request.files.get('file')
     if file:
@@ -64,8 +65,12 @@ def image_uploader():
             path = os.path.join(ASSETS_UPLOAD_PATH, filename)
             file.save(path)
             return jsonify({'location': filename})
-    output = make_response(404)
-    output.headers['Error'] = 'Filename needs to be JPG, JPEG, GIF or PNG'
+    output = Response(json.dumps({'status': 'failed',
+                                  'message': 'Filename needs to be JPG, JPEG, GIF or PNG'}),
+                      status=400,
+                      headers={'Error': 'Filename needs to be JPG, JPEG, GIF or PNG'},
+                      content_type='application/json')
+    # output.headers['Error'] = 'Filename needs to be JPG, JPEG, GIF or PNG'
     return output
 
 
@@ -99,7 +104,7 @@ def delete(article_id):
     try:
         db.session.delete(item)
         db.session.commit()
-        flash('Article has been removed successfully', 'success')
+        flash('Article has been removed successfully.', 'success')
         return redirect(url_for('articles.index'))
     except ValidationError as e:
         errors = e.normalized_messages()

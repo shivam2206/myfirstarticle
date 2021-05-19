@@ -1,9 +1,7 @@
+import io
 import json
-
-import requests
-
 from myfirstarticle.database import db
-from myfirstarticle.model import Author
+from myfirstarticle.model import Author, Article
 from tests.base import BaseTestCase
 
 
@@ -11,8 +9,13 @@ class BaseRouteTestCase(BaseTestCase):
     DEFAULT_NAME = 'User1 Some'
     DEFAULT_EMAIL = 'user1@some.com'
     DEFAULT_PASSWORD = '12341234'
+    DEFAULT_TITLE = 'Welcome to First Article'
+    DEFAULT_SHORT_DESCRIPTION = 'This is my description for preview'
+    DEFAULT_LONG_DESCRIPTION = '<h2>Now this is the main content.<br></h2>'
+
     DEFAULT_URL_LOGIN = '/login'
     DEFAULT_URL_REGISTER = '/register'
+    DEFAULT_URL_CREATE_ARTICLE = '/articles/create'
 
     def register_user(self, url=DEFAULT_URL_REGISTER, name=DEFAULT_NAME, email=DEFAULT_EMAIL, password=DEFAULT_PASSWORD,
                       **kwargs):
@@ -32,6 +35,25 @@ class BaseRouteTestCase(BaseTestCase):
             data=dict(
                 email=email,
                 password=password
+            ),
+            **kwargs
+        )
+
+    def create_article(self, url=DEFAULT_URL_CREATE_ARTICLE,
+                       title=DEFAULT_TITLE,
+                       short_description=DEFAULT_SHORT_DESCRIPTION,
+                       long_description=DEFAULT_LONG_DESCRIPTION,
+                       auto_login=True,
+                       **kwargs):
+        if auto_login:
+            self.register_user()
+            self.login_user()
+        return self.client.post(
+            url,
+            data=dict(
+                title=title,
+                short_description=short_description,
+                long_description=long_description
             ),
             **kwargs
         )
@@ -177,3 +199,117 @@ class TestAuthenticationRoutes(BaseRouteTestCase):
         response = self.login_user(url=response.headers['Location'])
         assert response.status_code == 302
         assert response.headers['Location'] == 'http://127.0.0.1:5000/articles/create'
+
+
+class TestArticleRoutes(BaseRouteTestCase):
+
+    def test_article_create(self):
+        response = self.create_article()
+        assert response.status_code == 302
+        assert response.headers['Location'] == 'http://127.0.0.1:5000/articles/1'
+
+        article = Article.query.first()
+        assert article
+        assert article.title == self.DEFAULT_TITLE
+        assert article.short_description == self.DEFAULT_SHORT_DESCRIPTION
+        assert article.long_description == self.DEFAULT_LONG_DESCRIPTION
+        assert article.published
+
+    def test_article_view(self):
+        self.create_article()
+        response = self.client.get('/articles/1')
+        assert response.status_code == 200
+        assert self.DEFAULT_TITLE in response.get_data(as_text=True)
+        assert self.DEFAULT_LONG_DESCRIPTION in response.get_data(as_text=True)
+
+    def test_article_on_homepage(self):
+        self.create_article()
+        response = self.client.get('/')
+        assert response.status_code == 200
+        assert self.DEFAULT_TITLE in response.get_data(as_text=True)
+        assert self.DEFAULT_SHORT_DESCRIPTION in response.get_data(as_text=True)
+
+    def test_article_options(self):
+        self.create_article(follow_redirects=True)
+        response = self.client.get('/articles/1')
+        assert '/articles/edit' in response.get_data(as_text=True)
+        assert '/articles/delete' in response.get_data(as_text=True)
+
+        self.client.get('/logout')
+        email = 'newuser@new.com'
+        password = '43214321'
+        self.register_user(email=email, password=password)
+        self.login_user(email=email, password=password)
+
+        response = self.client.get('/articles/1')
+        assert '/articles/edit' not in response.get_data(as_text=True)
+        assert '/articles/delete' not in response.get_data(as_text=True)
+
+    def test_article_edit(self):
+        self.create_article()
+        data = dict(title='Updated title is here',
+                    short_description='I got updated too.',
+                    long_description='!!! <b>Awesome content</b> !!!')
+        response = self.client.get('/articles/edit/1')
+        assert response.status_code == 200
+        assert 'Publish' in response.get_data(as_text=True)
+
+        response = self.client.post('/articles/edit/1', data=data)
+        assert response.status_code == 302
+        assert response.headers['Location'] == 'http://127.0.0.1:5000/articles/1'
+
+        articles = Article.query.all()
+        assert len(articles) == 1  # Ensure it didn't create a new entry
+        assert articles[0].title == data['title']
+        assert articles[0].short_description == data['short_description']
+        assert articles[0].long_description == data['long_description']
+        assert articles[0].created_on < articles[0].modified_on
+
+        response = self.client.get('/articles/edit/1', follow_redirects=True)
+        assert response.status_code == 200
+        assert 'Article has been updated successfully.' in response.get_data(as_text=True)
+
+    def test_article_delete(self):
+        self.create_article()
+        response = self.client.get('/articles/delete/1')
+        assert response.status_code == 302
+        assert response.headers['Location'] == 'http://127.0.0.1:5000/articles/'
+
+        assert not Article.query.first()
+
+    def test_article_delete_message(self):
+        self.create_article()
+        response = self.client.get('/articles/delete/1', follow_redirects=True)
+        assert response.status_code == 200
+        assert 'Article has been removed successfully.' in response.get_data(as_text=True)
+
+    def test_invalid_article(self):
+        response = self.client.get('articles/345')
+        assert response.status_code == 404
+
+    def test_successful_file_upload(self):
+        data = dict()
+        data['file'] = (io.BytesIO(b"a fake image"), 'fake.jpg')
+        self.register_user()
+        self.login_user()
+        response = self.client.post(
+            '/articles/image_uploader', data=data, follow_redirects=True,
+            content_type='multipart/form-data'
+        )
+        assert response.status_code == 200
+        file_name = json.loads(response.get_data(as_text=True))['location']
+        assert 'file_' in file_name
+        assert '.jpg' in file_name
+
+    def test_invalid_file_upload(self):
+        data = dict()
+        data['file'] = (io.BytesIO(b"a fake file"), 'fake.pdf')
+        self.register_user()
+        self.login_user()
+        response = self.client.post(
+            '/articles/image_uploader', data=data, follow_redirects=True,
+            content_type='multipart/form-data'
+        )
+        assert response.status_code == 400
+        assert response.headers['Error'] == 'Filename needs to be JPG, JPEG, GIF or PNG'
+        assert json.loads(response.get_data(as_text=True))['message'] == 'Filename needs to be JPG, JPEG, GIF or PNG'
