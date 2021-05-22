@@ -7,8 +7,9 @@ from flask_login import login_required, current_user
 from marshmallow import ValidationError
 from werkzeug.utils import redirect
 
+from myfirstarticle.articles.tasks import sync_article_views
 from myfirstarticle.database import db
-from myfirstarticle.model import Article
+from myfirstarticle.model import Article, ArticleView
 from myfirstarticle.schemas import ArticleSchema
 
 articles = Blueprint('articles',
@@ -26,6 +27,9 @@ def index():
 @articles.route('/<int:article_id>')
 def view(article_id):
     item = Article.query.get_or_404(article_id)
+    article_view = ArticleView(article_id=item.id)
+    db.session.add(article_view)
+    db.session.commit()
     return render_template('articles/view.html', item=item)
 
 

@@ -1,6 +1,4 @@
-from myfirstarticle import create_app
+from myfirstarticle import create_app, ext_celery
 
-if __name__ == '__main__':
-    app = create_app()
-    app.run()
-
+app = create_app()
+celery = ext_celery.celery

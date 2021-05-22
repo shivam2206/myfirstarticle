@@ -2,7 +2,11 @@
 {% block title %} {{ item.title }}  {% endblock %}
 {% block mainheading %} {{ item.title }}  {% endblock %}
 
-{% block subheading %} {% endblock %}
+{% block subheading %}
+    {% if item.views %}
+        {{ item.views }} Views
+    {% endif %}
+{% endblock %}
 
 {% block content %}
 <!-- Post Content-->
