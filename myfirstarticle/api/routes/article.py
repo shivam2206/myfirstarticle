@@ -34,11 +34,11 @@ class ArticleAPI(MethodResource, Resource):
         new.author_id = kwargs['author'].id
         db.session.add(new)
         db.session.commit()
-        return new
+        return new, 201
 
     @login_required
     @use_kwargs(ArticleUpdateSchema, location="json")
-    @marshal_with(ArticleUpdateSchema)
+    @marshal_with(ArticleSchema)
     def put(self, **kwargs):
         article = Article.query.get_or_404(kwargs['id'], description="Invalid Id")
 

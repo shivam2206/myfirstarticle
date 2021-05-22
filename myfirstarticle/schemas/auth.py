@@ -11,3 +11,4 @@ class AuthSchema(Schema):
 class TokenSchema(Schema):
     token = fields.String(dump_only=True, description="JWT Auth token")
     status = fields.String(dump_only=True, description="Request status")
+    message = fields.String(dump_only=True, description="Status details")

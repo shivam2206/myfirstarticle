@@ -18,5 +18,6 @@ class AuthorPaginationSchema(PaginationSchema):
     results = fields.Nested(AuthorSchema, many=True)
 
 
-class AuthorUpdateSchema(BaseUpdateSchema, AuthorSchema):
-    pass
+class AuthorUpdateSchema(Schema):
+    name = fields.String(load_only=True, validate=Length(min=1, max=100), description="Author name")
+    password = fields.String(load_only=True, validate=Length(min=4, max=16), description="Account password")

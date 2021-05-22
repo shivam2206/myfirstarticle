@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, current_app
 from flask_restful import abort
 
 from .helper import decode_auth_token
@@ -6,13 +6,13 @@ from .paginator import get_paginated_list
 from functools import wraps
 
 from ..model import Author
-from ..settings import MAX_PAGE_ITEMS
 
 
 def add_pagination(func):
     @wraps(func)
     def decorated(*args, **kwargs):
-        result = get_paginated_list(func(*args, **kwargs), request.args.get('start', 1), MAX_PAGE_ITEMS)
+        result = get_paginated_list(func(*args, **kwargs), request.args.get('start', 1),
+                                    current_app.config.get('MAX_PAGE_ITEMS', 20))
         return result
     return decorated
 

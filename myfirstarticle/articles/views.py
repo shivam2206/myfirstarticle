@@ -2,7 +2,7 @@ import json
 import os
 from datetime import datetime
 
-from flask import Blueprint, render_template, request, url_for, jsonify, flash, Response
+from flask import Blueprint, render_template, request, url_for, jsonify, flash, Response, current_app
 from flask_login import login_required, current_user
 from marshmallow import ValidationError
 from werkzeug.utils import redirect
@@ -10,7 +10,6 @@ from werkzeug.utils import redirect
 from myfirstarticle.database import db
 from myfirstarticle.model import Article
 from myfirstarticle.schemas import ArticleSchema
-from myfirstarticle.settings import ASSETS_UPLOAD_PATH
 
 articles = Blueprint('articles',
                      __name__,
@@ -62,7 +61,7 @@ def image_uploader():
         fn, ext = filename.split('.')
         filename = f'file_{str(datetime.utcnow())}.{ext}'
         if ext in ['jpg', 'gif', 'png', 'jpeg']:
-            path = os.path.join(ASSETS_UPLOAD_PATH, filename)
+            path = os.path.join(current_app.config['ASSETS_UPLOAD_PATH'], filename)
             file.save(path)
             return jsonify({'location': filename})
     output = Response(json.dumps({'status': 'failed',
