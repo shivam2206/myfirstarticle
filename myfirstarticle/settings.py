@@ -21,3 +21,7 @@ MAX_PAGE_ITEMS = 20
 
 
 ASSETS_UPLOAD_PATH = os.path.join(os.path.dirname(__file__), 'static/uploads')
+
+
+# ---- Celery Config ----
+CELERY_BROKER_URL = os.environ.get('BROKER_URL', 'pyamqp://guest@localhost//')

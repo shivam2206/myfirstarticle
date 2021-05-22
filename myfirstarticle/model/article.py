@@ -4,7 +4,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Boolean, Text, Foreign
 
 from myfirstarticle.database import db
 
-__all__ = ['Article']
+__all__ = ['Article', 'ArticleView']
 
 
 class Article(db.Model):
@@ -16,9 +16,18 @@ class Article(db.Model):
     created_on = Column(DateTime, default=datetime.utcnow)
     modified_on = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     author_id = Column(Integer, ForeignKey('author.id', ondelete='CASCADE'))
+    views = Column(Integer, default=0)
 
     def __repr__(self):
         return f'<Article id={self.id} title={self.title}>'
 
     class Meta:
         allow_updates = ['title', 'short_description', 'long_description', 'published']
+
+
+class ArticleView(db.Model):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_on = Column(DateTime, default=datetime.utcnow)
+    article_id = Column(Integer, ForeignKey('article.id', ondelete='CASCADE'))
+
+    # TODO: Add more fields for better insights like location
