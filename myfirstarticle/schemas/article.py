@@ -15,7 +15,7 @@ class ArticleSchema(Schema):
     long_description = fields.String(required=True, description="Full content of the Article")
     created_on = fields.DateTime(dump_only=True, description="Article creation date time")
     modified_on = fields.DateTime(dump_only=True, description="Recent Article modification date time")
-    author = fields.Nested(AuthorSchema)
+    author = fields.Nested(AuthorSchema, dump_only=True)
 
 
 class ArticlePaginationSchema(PaginationSchema):
@@ -25,9 +25,9 @@ class ArticlePaginationSchema(PaginationSchema):
 class ArticleUpdateSchema(Schema):
     id = fields.Integer(required=True, description="Id of the Article")
     title = fields.String(validate=Length(min=5, max=100), description="Article title")
-    short_description = fields.String(required=True, validate=Length(max=300),
+    short_description = fields.String(validate=Length(min=1, max=300),
                                       description="Short description for preview")
-    long_description = fields.String(required=True, description="Full content of the Article")
+    long_description = fields.String(description="Full content of the Article")
 
 
 class ArticleGetSchema(Schema):

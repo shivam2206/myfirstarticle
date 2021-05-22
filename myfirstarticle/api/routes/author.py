@@ -5,25 +5,15 @@ from sqlalchemy.exc import IntegrityError
 
 from ...database import db
 from ...model import Author
-from ...schemas import (SuccessSchema,
-                        BaseRemoveSchema,
-                        AuthorPaginationSchema,
-                        AuthorSchema,
-                        AuthorUpdateSchema)
-from ...utils.decorators import add_pagination, login_required
+from ...schemas import (AuthorSchema,
+                        AuthorUpdateSchema, SuccessSchema)
+from ...utils.decorators import login_required
 
 __all__ = ['AuthorAPI']
 
 
 @doc(tags=['Authors'])
 class AuthorAPI(MethodResource, Resource):
-    @login_required
-    @marshal_with(AuthorPaginationSchema)
-    @add_pagination
-    def get(self, **kwargs):
-
-        items = Author.query.all()
-        return items
 
     @use_kwargs(AuthorSchema, location="json")
     @marshal_with(AuthorSchema)
@@ -44,9 +34,9 @@ class AuthorAPI(MethodResource, Resource):
 
     @login_required
     @use_kwargs(AuthorUpdateSchema, location="json")
-    @marshal_with(AuthorUpdateSchema)
+    @marshal_with(AuthorSchema)
     def put(self, **kwargs):
-        author = Author.query.get_or_404(kwargs['id'], description="Invalid Id")
+        author = kwargs['author']
 
         for key in Author.Meta.allow_updates:
             if key in kwargs:
@@ -54,14 +44,3 @@ class AuthorAPI(MethodResource, Resource):
 
         db.session.commit()
         return author
-
-    @login_required
-    @use_kwargs(BaseRemoveSchema, location="json")
-    @marshal_with(SuccessSchema)
-    def delete(self, **kwargs):
-        author = Author.query.get_or_404(kwargs['id'], description="Invalid Id")
-        try:
-            db.session.delete(author)
-            db.session.commit()
-        except Exception as e:
-            return {"status": "failed", "message": str(e)}

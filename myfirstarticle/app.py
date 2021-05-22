@@ -17,13 +17,11 @@ def create_app(config=None):
     """This function creates the Flask app and handles all the initial configuration"""
 
     app = Flask(__name__)
-
+    # Apply default config
+    app.config.from_object(settings)
     if config:
         # Apply any modified config
         app.config.from_object(config)
-    else:
-        # Apply default config
-        app.config.from_object(settings)
 
     db.init_app(app)
     migrate.init_app(app, db)
@@ -48,6 +46,5 @@ def create_app(config=None):
     api = Api(app, prefix='/api/v1')
     docs = FlaskApiSpec(app)
     initialize_routes(api, docs)
-
 
     return app
