@@ -2,6 +2,8 @@
 ## A simple blogging application developed in Python with the following tech stack.
 ### Flask + MySQL + Nginx + Gunicorn + Celery + Docker + Automated Testing
 
+[![screen1.png](https://i.postimg.cc/dVGd4wpP/screen1.png)](https://postimg.cc/fVTJbnMB)
+
 It's just a result of the motivation to sharpen my as well as other's skills in Flask. The intention behind making this an open-source project is just to hear about the possible improvements from the brilliant minds of the rest of the world.
 I am trying my best to make this project production-ready not only from the deployment perspective but more from a robust & scalable code perspective. During my learning days, I really couldn't find any single place helping in understanding different Flask features/extensions altogether. Flask is not alone, it comes with its vast ecosystem.
 
@@ -10,6 +12,14 @@ I will keep adding stuff to make this one place for most of the developers who a
 I'll appreciate any feedback. I am very active on the following platforms - 
 - <a href="https://github.com/shivam2206">Github</a>
 - <a href="https://www.linkedin.com/in/shivam2206/">Linkedin</a>
+
+## Screenshots
+
+[![screen2.png](https://i.postimg.cc/YCNGQ8Lt/screen2.png)](https://postimg.cc/yDd8HmTG)
+
+[![screen3.png](https://i.postimg.cc/Hn7jntCD/screen3.png)](https://postimg.cc/Lg2m0LXN)
+
+[![screen4.png](https://i.postimg.cc/BvQT6RYr/screen4.png)](https://postimg.cc/CRXBrrV7)
 
 
 ### Run Using Docker
@@ -53,6 +63,8 @@ I'll appreciate any feedback. I am very active on the following platforms -
 
 
 - Step 5: Run migrations <br>
+  Assuming you already have MySQL installed.
+  ```export DATABASE_URI=mysql+pymysql://username:password@localhost/master_db``` <br>
   ```flask db upgrade```
 
 
