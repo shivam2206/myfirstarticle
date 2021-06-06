@@ -63,7 +63,7 @@ I'll appreciate any feedback. I am very active on the following platforms -
 
 
 - Step 5: Run migrations <br>
-  Assuming you already have MySQL installed.
+  Assuming you already have MySQL installed. <br>
   ```export DATABASE_URI=mysql+pymysql://username:password@localhost/master_db``` <br>
   ```flask db upgrade```
 
