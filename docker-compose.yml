@@ -1,0 +1,74 @@
+version: "3.7"
+
+services:
+  web: &web
+    build:
+      context: .
+      dockerfile: ./deployments/app/Dockerfile
+    environment:
+      DATABASE_URI: "mysql+pymysql://shivam:shivam@db/db"
+      BROKER_URL: "pyamqp://guest@rabbitmq//"
+      APP_HOST: "localhost"
+      APP_PORT: "5000"
+
+    expose:
+      - "5000"
+    depends_on:
+      - db
+      - rabbitmq
+    restart: always
+    networks:
+      - backend
+    volumes:
+      - app_data:/home/app/web/myfirstarticle/static/
+
+  db:
+    image: mariadb:10.5
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: "password"
+      MYSQL_USER: "shivam"
+      MYSQL_PASSWORD: "shivam"
+      MYSQL_DATABASE: "db"
+
+    expose:
+      - "3306"
+    restart: on-failure
+
+    networks:
+      - backend
+
+  rabbitmq:
+    image: rabbitmq:3.8.17-rc.2-management-alpine
+    expose:
+      - "5672"
+      - "15672"
+    ports:
+    - "15672:15672"
+    networks:
+      - backend
+
+  nginx:
+    build:
+      context: ./deployments/nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+    networks:
+      - backend
+    volumes:
+      - app_data:/home/app/web/myfirstarticle/static/
+    restart: on-failure
+
+  worker:
+    <<: *web
+    entrypoint: celery -A app.celery  worker -l info -B
+    depends_on:
+      - web
+
+networks:
+  backend:
+
+volumes:
+  app_data:
